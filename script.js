@@ -50,7 +50,6 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, {
     // CRÍTICO: Observar el elemento cuando entra (0.15) y cuando sale completamente (0)
-    // El 'rootMargin' permite un margen de error al disparar la salida
     threshold: [0, OPTIMIZED_THRESHOLD], 
     rootMargin: "0px 0px -150px 0px" 
 });
@@ -66,10 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return; 
         }
 
-        // Aplicar estilos iniciales de FADE-OUT/BLUR-IN (para todas las demás secciones)
+        // Aplicar estilos iniciales de FADE-OUT/BLUR-IN y desplazamiento (Aplica 'content-box' en CSS)
         el.style.opacity = 0;
+        el.style.filter = 'blur(5px)'; // Aplicar blur inicial
         el.style.transform = `translateY(${SLIDE_DISTANCE}px)`;
-        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out, filter 0.6s ease-out';
+        // NOTA: Se ha quitado la redefinición de 'el.style.transition' aquí, ya que el CSS lo maneja.
         el.style.willChange = 'opacity, transform, filter';
         
         observer.observe(el);
