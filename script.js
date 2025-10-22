@@ -45,7 +45,19 @@ const observer = new IntersectionObserver((entries, observer) => {
 // Inicializamos y asignamos estilos para la animación
 document.addEventListener('DOMContentLoaded', () => {
     allContentBoxes.forEach((el) => {
-        // Inicializamos estilos que el CSS usará en la animación (desde 80px abajo y opacidad 0)
+        
+        // **NUEVA LÓGICA:** Excluir la sección 'details' del efecto de fade-in
+        if (el.classList.contains('details')) {
+            // 1. Mostrar inmediatamente
+            el.style.opacity = 1;
+            el.style.transform = 'translateY(0px)';
+            el.classList.add('show');
+            
+            // 2. No observar, ya que no queremos que cambie con el scroll
+            return; 
+        }
+
+        // Aplicar estilos iniciales de fade-in (para todas las demás secciones)
         el.style.opacity = 0;
         el.style.transform = `translateY(${SLIDE_DISTANCE}px)`;
         el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
@@ -62,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // =========================================================
-// ⏳ 2. CONTADOR REGRESIVO PARA EL EVENTO
+// ⏳ 2. CONTADOR REGRESIVO PARA EL EVENTO (Mantener)
 // =========================================================
 
 // ⚠️ Cambia esta fecha por la real del evento (¡ACTUALIZAR!)
@@ -94,7 +106,7 @@ const x = setInterval(() => {
 
 
 // =========================================================
-// 📬 3. MENSAJE DE CONFIRMACIÓN DE FORMULARIO
+// 📬 3. MENSAJE DE CONFIRMACIÓN DE FORMULARIO (Mantener)
 // =========================================================
 
 const rsvpForm = document.getElementById('rsvp-form');
@@ -102,13 +114,12 @@ if (rsvpForm) {
     rsvpForm.addEventListener('submit', (event) => {
         event.preventDefault();
         alert('¡Gracias por confirmar! (Este es un mensaje de prueba de la funcionalidad).');
-        // Aquí iría la lógica para enviar los datos
     });
 }
 
 
 // =========================================================
-// 🔊 4. BOTÓN DE BIENVENIDA Y REPRODUCCIÓN DE AUDIO (CORRECCIÓN CRÍTICA)
+// 🔊 4. BOTÓN DE BIENVENIDA Y REPRODUCCIÓN DE AUDIO (Mantener)
 // =========================================================
 
 document.getElementById('boton-bienvenido').addEventListener('click', function () {
@@ -128,7 +139,6 @@ document.getElementById('boton-bienvenido').addEventListener('click', function (
     setTimeout(() => {
         bienvenida.style.display = 'none';
         
-        // Asegurar que el contenido principal aparezca si estaba oculto
         const principal = document.querySelector('.invitacion-principal');
         if (principal) {
             principal.style.display = 'block'; 
