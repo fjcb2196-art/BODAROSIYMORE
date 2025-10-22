@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- 🔤 Metadatos básicos -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Nos Casamos! Invitación Virtual</title>
+
+    <!-- 🎨 Hojas de estilo -->
+    <link rel="stylesheet" href="estilos.css"> 
+    <link rel="stylesheet" href="petalos.css"> 
+    <link rel="stylesheet" href="decoracion.css"> 
+
+    <!-- 🔠 Tipografía externa -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+</head>
+<body>
+     
+
+
+
+
+  <!-- Pantalla de bienvenida -->
+  <div id="pantalla-bienvenida">
+    <button id="boton-bienvenido">Bienvenido</button>
+  </div>
+      <!-- Audio oculto -->
+  <audio id="audio-boda" preload="auto">
+    <source src="https://screenapp.io/app/v/n3LW4S7Taf" type="audio/mpeg">
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- 🌸 Contenedor de pétalos animados -->
+    <div id="petals-container">
+        <!-- 15 pétalos decorativos -->
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+    </div>
+
+    <!-- 🖼️ Contenedor principal con scroll y fondo -->
+    <div id="main-wrapper">
+
+        <!-- 🌟 Decoración superior (activada por JS) -->
+        <div class="title-decoration-container" id="decoration-wrapper"></div>
+
+        <!-- 📦 Contenedor de contenido -->
+        <div class="container">
+
+            <!-- 🖋️ Título principal -->
+            <div class="content-box title-box hidden">
+                <img src="https://i.ibb.co/DH5Jtd98/Untitled-design-1.png" alt="Rosibelys & Valmore - Título de Invitación" class="title-image">
+            </div>
+
+            <!-- 💌 Mensaje de bienvenida -->
+            <div class="content-box section hidden">
+                <p class="invitation-intro">
+                    ¡Con enorme alegría queremos compartir una noticia muy especial! 💍
+                    Nos casamos, y sería un honor contar con tu presencia en este día tan importante para nosotros. Acompáñanos a celebrar el amor, la unión y el comienzo de una nueva etapa juntos.
+                    Tu compañía hará que este momento sea aún más inolvidable. ¡Te esperamos con todo el corazón!
+                </p>
+            </div>
+
+            <!-- 📖 Nuestra historia -->
+            <div class="content-box section hidden">
+                <h3>Nuestra Historia</h3>
+                <p>
+                    Ambos escogimos juntar nuestras vidas. Nos entregamos sabiendo que la magia de nuestro amor es caminar juntos, en la prosperidad y adversidad. 
+                    Quiero vivir cada momento contigo y a tu lado disfrutar de la luz de cada mañana, la melodía de cada música, y el suspiro de cada latir en mi corazón. 
+                    Así que esta increíble aventura no termina aún, sino que apenas comienza...
+                </p>
+                <img src="https://i.ibb.co/ymkdWZvv/Black-and-White-Wedding-Rings-Store-Logo-removebg-preview.png" alt="Logo de Anillos de Boda" class="event-image">
+            </div>
+
+            <!-- 📅 Detalles del evento -->
+            <div class="content-box section details hidden">
+                <h2>Detalles del Evento</h2>
+                <img src="https://i.ibb.co/2YM14DTF/Your-paragraph-text.png" alt="Detalles de Fecha, Hora y Lugar" class="event-image" style="max-width: 90%; margin: 30px auto;">
+                <a href="https://maps.app.goo.gl/FydzmKLbQaGURzpS8" target="_blank" class="map-link" style="margin-bottom: 20px;">Ver Ubicación en Mapa</a>
+            </div>
+
+            <!-- 👗 Código de vestimenta -->
+            <div class="content-box section hidden">
+                <h3>Código de Vestimenta</h3>
+                <img src="https://i.ibb.co/QvL04s9z/Invitacion-boda-ilustrada-marron-y-verde.png" alt="Código de Vestimenta - Formal" class="event-image">
+                <p>Se permite vestir con los colores de preferencia con una presencia formal, excluyendo únicamente el blanco y el rojo.</p>
+            </div>
+
+            <!-- ⏳ Cuenta regresiva -->
+            <div class="content-box section hidden" id="countdown-container">
+
+                <div id="countdown" class="countdown-overlay">Cargando...</div>
+            </div>
+
+            <!-- 📬 Confirmación de asistencia -->
+            <div class="content-box section hidden">
+                <h3>Confirmación de Asistencia</h3>                               
+                <form id="rsvp-form">
+                    <label for="name">Nombre Completo:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="attend">¿Asistirás al evento?</label>
+                    <select id="attend" name="attend" required>
+                        <option value="">-- Seleccionar --</option>
+                        <option value="si">¡Sí, asistiré con gusto!</option>
+                        <option value="no">Lamentablemente no podré asistir.</option>
+                    </select>
+
+                    <label for="guests">Número de Acompañantes (incluyéndote):</label>
+                    <select id="guests" name="guests" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+
+                    <button type="submit" class="rsvp-button">Enviar Confirmación</button>
+                </form>
+            </div>
+
+            <!-- 📞 Contacto -->
+            <div class="content-box section hidden">
+                <h3>Contacto</h3>
+                <img src="https://i.ibb.co/Dg64gxR9/rosiymore.png" alt="Rosi y More" class="event-image">
+                <p>Para cualquier duda o consulta, pueden contactar a [Nombre del Contacto] al teléfono [Número de Contacto].</p>
+            </div>
+        </div>
+    </div> 
+
+    <!-- 🧠 Scripts funcionales -->
+    <script src="script.js"></script> 
+    <script src="petalos.js"></script> 
+    <script src="contador.js"></script> 
+</body>
+</html>
