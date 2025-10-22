@@ -85,9 +85,12 @@ body {
 /* 📦 CONTENEDORES DE CONTENIDO Y SECCIONES (Responsive) */
 /* ========================================================= */
 .container {
+    /* MÁXIMO ANCHO Y CENTRADO: Asegura legibilidad en pantallas grandes */
     max-width: 600px;
     margin: 0 auto;
+    /* PADDING POR DEFECTO: 20px de margen a los lados en desktop/tablet */
     padding: 0 20px;
+    
     background-color: transparent;
     border-radius: 0;
     box-shadow: none;
@@ -101,14 +104,18 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* CENTRADO DE TEXTO: Alinea el contenido interno al centro */
     text-align: center;
+    
     background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
     border-radius: 0;
-    padding: 30px 15px;
+    /* PADDING INTERNO AJUSTADO: 40px arriba/abajo, 20px a los lados (desktop) */
+    padding: 40px 20px;
+    
     margin: 0 auto;
-    max-width: 100%; /* CRÍTICO: 100% asegura que no se desborde */
+    max-width: 100%; 
     will-change: transform, opacity;
 }
 .intro-box {
@@ -181,7 +188,7 @@ h2, h3, .invitation-intro {
     background-color: var(--color-secundario);
 }
 #rsvp-form {
-    text-align: left;
+    text-align: left; /* Deja el formulario alineado a la izquierda para mejor UX */
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.95);
     border-radius: 8px;
@@ -234,6 +241,9 @@ h2, h3, .invitation-intro {
     align-items: center;
     padding: 20px 0;
     max-width: 350px;
+    /* CENTRADO: Asegura que el bloque del contador se centre dentro del content-box */
+    margin-left: auto;
+    margin-right: auto;
 }
 #countdown.finished {
     font-size: 2em;
@@ -304,7 +314,8 @@ h2, h3, .invitation-intro {
 @media (max-width: 768px) {
     /* Contenedor principal */
     .container {
-        padding: 0 30px;
+        /* CRÍTICO: 30px de relleno lateral para un margen de separación óptimo en móvil */
+        padding: 0 30px; 
         max-width: 95%; 
     }
 
@@ -326,6 +337,7 @@ h2, h3, .invitation-intro {
     /* Ajuste de espaciado */
     .content-box {
         min-height: auto; 
+        /* PADDING INTERNO: Sincronizado con el contenedor para mayor espacio */
         padding: 50px 30px; 
     }
 
@@ -363,7 +375,7 @@ h2, h3, .invitation-intro {
 }
 
 /* ========================================================= */
-/* Pantalla de bienvenida */
+/* Pantalla de bienvenida (sin cambios) */
 /* ========================================================= */
 #pantalla-bienvenida {
     position: fixed;
@@ -436,4 +448,3 @@ h2, h3, .invitation-intro {
         max-height: 70vh; 
     }
 }
-
