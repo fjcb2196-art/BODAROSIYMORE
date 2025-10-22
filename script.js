@@ -1,145 +1,424 @@
-// =========================================================
-// 🌟 1. APARICIÓN/DESAPARICIÓN GRADUAL EN SCROLL (OPTIMIZADO)
-// =========================================================
-
-// Elementos clave
-const decorationWrapper = document.getElementById('decoration-wrapper');
-const allContentBoxes = document.querySelectorAll('.content-box');
-
-// Umbral fijo para que la animación se dispare al 15% de visibilidad
-const OPTIMIZED_THRESHOLD = 0.15; 
-const SLIDE_DISTANCE = 80;
-
-// Observador de intersección
-const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-
-        // 🎯 Aparición de secciones (solo animar una vez y desobservar)
-        if (entry.target.classList.contains('content-box')) {
-            if (entry.isIntersecting) {
-                // Aplicamos la clase 'show' que activa la transición de CSS
-                entry.target.classList.add('show');
-                
-                // OPTIMIZACIÓN: Una vez animado, dejamos de observarlo
-                observer.unobserve(entry.target);
-            }
-        }
-
-        // 🎯 Ocultar/Mostrar decoración superior
-        if (entry.target === allContentBoxes[0] && decorationWrapper) {
-            if (entry.isIntersecting) {
-                // Si la primera caja es visible, ocultar decoración
-                decorationWrapper.classList.add('hide-decoration');
-                decorationWrapper.classList.remove('show-decoration');
-            } else {
-                // Si la primera caja NO es visible (scroll hacia abajo), mostrar decoración
-                decorationWrapper.classList.remove('hide-decoration');
-                decorationWrapper.classList.add('show-decoration');
-            }
-        }
-    });
-}, {
-    threshold: OPTIMIZED_THRESHOLD 
-});
-
-// Inicializamos y asignamos estilos para la animación
-document.addEventListener('DOMContentLoaded', () => {
-    allContentBoxes.forEach((el) => {
-        
-        // **LÓGICA CRÍTICA:** Excluir la sección 'details' del efecto de scroll
-        if (el.classList.contains('details')) {
-            // 1. Mostrar inmediatamente con la clase 'show' para activar el FADE-IN rápido en CSS
-            el.classList.add('show');
-            
-            // 2. Ya no es necesario observar esta sección
-            return; 
-        }
-
-        // Aplicar estilos iniciales de fade-in para todas las demás secciones (con desplazamiento)
-        el.style.opacity = 0;
-        el.style.transform = `translateY(${SLIDE_DISTANCE}px)`;
-        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-        el.style.willChange = 'opacity, transform';
-        
-        observer.observe(el);
-    });
-
-    // Activamos la decoración floral inmediatamente al cargar
-    if (decorationWrapper) {
-        decorationWrapper.classList.add('show-decoration');
-    }
-});
-
-
-// =========================================================
-// ⏳ 2. CONTADOR REGRESIVO PARA EL EVENTO (Mantener)
-// =========================================================
-
-// ⚠️ Cambia esta fecha por la real del evento (¡ACTUALIZAR!)
-const eventDate = new Date("Feb 12, 2026 16:00:00").getTime();
-
-const x = setInterval(() => {
-    const now = new Date().getTime();
-    const distance = eventDate - now;
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    const countdownEl = document.getElementById("countdown");
-    if (countdownEl) {
-        countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }
-
-    // 🎉 Mensaje final cuando llega el día
-    if (distance < 0) {
-        clearInterval(x);
-        if (countdownEl) {
-            countdownEl.innerHTML = "¡EL GRAN DÍA ES HOY!";
-            countdownEl.classList.add('finished');
-        }
-    }
-}, 1000);
-
-
-// =========================================================
-// 📬 3. MENSAJE DE CONFIRMACIÓN DE FORMULARIO (Mantener)
-// =========================================================
-
-const rsvpForm = document.getElementById('rsvp-form');
-if (rsvpForm) {
-    rsvpForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        alert('¡Gracias por confirmar! (Este es un mensaje de prueba de la funcionalidad).');
-    });
+/* ========================================================= */
+/* 🎨 PALETA DE COLORES Y VARIABLES GLOBALES */
+/* ========================================================= */
+:root {
+    --color-principal: #4D5C58;
+    --color-secundario: #92A091;
+    --color-texto: #000000;
+    --color-acento: #C4CDC9;
+    --color-fondo-container: rgba(250, 250, 245, 0.95);
 }
 
+/* ========================================================= */
+/* 🧭 BASE HTML Y BODY (CORRECCIÓN CRÍTICA DE SCROLL) */
+/* ========================================================= */
+html {
+    height: 100%;
+}
+body {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--color-texto);
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    height: 100%;
+    min-height: 100vh;
+    background-image: none;
+    overflow: hidden; 
+    font-size: 1.1rem;
+    transform: translate3d(0, 0, 0); 
+    -webkit-transform: translate3d(0, 0, 0);
+}
 
-// =========================================================
-// 🔊 4. BOTÓN DE BIENVENIDA Y REPRODUCCIÓN DE AUDIO (Mantener)
-// =========================================================
-
-document.getElementById('boton-bienvenido').addEventListener('click', function () {
-    const bienvenida = document.getElementById('pantalla-bienvenida');
-    const audio = document.getElementById('audio-boda');
+/* ========================================================= */
+/* 🖼️ WRAPPER PRINCIPAL CON FONDO Y SCROLL (AJUSTADO) */
+/* ========================================================= */
+#main-wrapper {
+    /* CRÍTICO: Usamos 100% en lugar de 100vh para evitar el 'salto' en móviles */
+    height: 100%;
+    min-height: 100vh; 
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch; /* Mejora el scroll en iOS */
     
-    // 1. Iniciar la transición visual (opacidad a 0)
-    bienvenida.style.opacity = '0';
+    background-image: url('https://i.ibb.co/1tbLYZVn/Untitled-design.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: scroll;
     
-    // 2. Intentar la reproducción (CLAVE para Autoplay en móviles)
-    audio.volume = 0.25; 
-    audio.play().catch(error => {
-        console.log("Error de Autoplay (Ignorado si es por la política del navegador):", error);
-    });
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+}
 
-    // 3. Ocultar el div completamente después de la transición de 1.5s
-    setTimeout(() => {
-        bienvenida.style.display = 'none';
-        
-        const principal = document.querySelector('.invitacion-principal');
-        if (principal) {
-            principal.style.display = 'block'; 
-        }
-    }, 1500); 
-});
+/* ========================================================= */
+/* 🌸 DECORACIÓN SUPERIOR */
+/* ========================================================= */
+.title-decoration-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1s ease-out;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
+}
+.title-decoration-container.show-decoration { opacity: 1; }
+.title-decoration-container.hide-decoration { opacity: 0; }
+
+#title-decoration-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 95vw;
+    max-height: 95vh;
+    width: auto;
+    height: auto;
+}
+
+/* ========================================================= */
+/* 📦 CONTENEDORES DE CONTENIDO Y SECCIONES (Responsive) */
+/* ========================================================= */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    position: relative;
+    z-index: 11;
+}
+.content-box {
+    /* CRÍTICO: Usamos min-height: 90vh para evitar el conflicto del 100vh en móviles */
+    min-height: 90vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0;
+    padding: 30px 15px;
+    margin: 0 auto;
+    max-width: 100%; /* CRÍTICO: 100% asegura que no se desborde */
+    will-change: transform, opacity;
+}
+.intro-box {
+    min-height: 85vh;
+    padding-top: 10vh;
+    padding-bottom: 5vh;
+}
+.section {
+    position: relative;
+    padding: 0;
+    z-index: 11;
+}
+
+/* ========================================================= */
+/* ✨ EFECTOS DE APARICIÓN EN SCROLL (Añadido BLUR) */
+/* ========================================================= */
+/* Estado Inicial (CSS se aplica a través de JS al cargar) */
+.content-box {
+    /* TRANSICIÓN: Añadimos 'filter' a la transición */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out, filter 0.6s ease-out;
+    /* BLUR INICIAL: Se desenfoca al principio */
+    filter: blur(5px);
+}
+
+/* Estado Final (Clase añadida por JS cuando el elemento es visible) */
+.content-box.show {
+    opacity: 1 !important; 
+    /* REMOVER BLUR: Se vuelve nítido al aparecer */
+    filter: blur(0) !important; 
+    transform: translateY(0px) !important;
+}
+
+/* ========================================================= */
+/* 🖋️ TIPOGRAFÍA Y TÍTULOS */
+/* ========================================================= */
+h2, h3, .invitation-intro {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--color-principal);
+    font-weight: 700;
+    font-size: 1.5em;
+}
+
+/* ========================================================= */
+/* 🖼️ IMAGEN DE TÍTULO */
+/* ========================================================= */
+.title-image {
+    max-width: 100%;
+    max-height: 50vh;
+    width: auto; 
+    height: auto; 
+    display: block;
+    margin: 0 auto;
+    padding: 5vh 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+/* ========================================================= */
+/* 📍 BOTONES Y FORMULARIO RSVP */
+/* ========================================================= */
+.map-link, .rsvp-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 15px;
+    background-color: var(--color-principal);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    font-weight: 700;
+}
+.map-link:hover, .rsvp-button:hover {
+    background-color: var(--color-secundario);
+}
+#rsvp-form {
+    text-align: left;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid var(--color-principal);
+}
+#rsvp-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 700;
+}
+#rsvp-form input[type="text"],
+#rsvp-form select,
+#rsvp-form textarea {
+    font-family: 'Cormorant Garamond', serif;
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid var(--color-acento);
+    border-radius: 4px;
+    font-size: 1.1rem;
+}
+#rsvp-form button {
+    background-color: var(--color-principal);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-weight: 700;
+    width: 100%;
+}
+#rsvp-form button:hover {
+    background-color: var(--color-secundario);
+}
+
+/* ========================================================= */
+/* ⏳ CONTADOR DE TIEMPO */
+/* ========================================================= */
+#countdown {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3em;
+    color: var(--color-principal);
+    font-weight: 700;
+    margin-top: 20px;
+    font-style: italic;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 0;
+    max-width: 350px;
+}
+#countdown.finished {
+    font-size: 2em;
+    font-style: italic;
+    color: var(--color-principal);
+}
+.countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+}
+.countdown-unit span {
+    font-size: 1.8em;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-principal);
+}
+
+/* Fondo detrás del contador */
+#countdown-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.countdown-background-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -10%);
+    width: 100%;
+    max-width: 80%;
+    height: auto;
+    z-index: 1;
+    box-shadow: none;
+    margin: 0;
+}
+.countdown-overlay {
+    position: relative;
+    width: 90%;
+    text-align: center;
+    z-index: 5;
+    color: var(--color-principal);
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-shadow: none;
+}
+
+/* ========================================================= */
+/* 🖼️ IMÁGENES DE EVENTO */
+/* ========================================================= */
+.event-image {
+    max-width: 90%;
+    height: auto;
+    display: block;
+    margin: 30px auto;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================================= */
+/* 📱 MEDIA QUERIES (Ajustes responsivos y Títulos Grandes) */
+/* ========================================================= */
+
+@media (max-width: 768px) {
+    /* Contenedor principal */
+    .container {
+        padding: 0 10px;
+        max-width: 95%; 
+    }
+
+    /* Reducción de fuentes para móviles */
+    body {
+        font-size: 1.0rem; 
+    }
+    
+    /* Mantenemos el tamaño del texto de introducción como estaba */
+    .invitation-intro {
+        font-size: 1.3em; 
+    }
+
+    /* TÍTULOS GRANDES: Solo para h2 y h3 */
+    h2, h3 {
+        font-size: 1.7em; 
+    }
+    
+    /* Ajuste de espaciado */
+    .content-box {
+        min-height: auto; 
+        padding: 50px 10px; 
+    }
+
+    .intro-box {
+        min-height: 85vh;
+        padding-top: 80px; 
+        padding-bottom: 40px;
+    }
+    
+    /* Contador de tiempo */
+    #countdown {
+        font-size: 2em; 
+    }
+}
+
+@media (max-width: 480px) {
+    /* Mantenemos el tamaño del texto de introducción como estaba */
+    .invitation-intro {
+        font-size: 1.1em; 
+    }
+
+    /* TÍTULOS GRANDES: Solo para h2 y h3 en celulares pequeños */
+    h2, h3 {
+        font-size: 1.5em; 
+    }
+
+    /* Contador de tiempo */
+    #countdown {
+        font-size: 7vw !important;
+        padding: 0 5px;
+    }
+    .countdown-unit {
+        margin: 0 2px !important;
+    }
+}
+
+/* ========================================================= */
+/* Pantalla de bienvenida */
+/* ========================================================= */
+#pantalla-bienvenida {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1A1A1A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 1.5s ease;
+}
+
+/* Botón de bienvenida */
+#boton-bienvenido {
+    background-color: #556B2F;
+    color: white;
+    font-size: 24px;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Contenido principal oculto inicialmente */
+.invitacion-principal {
+    display: none;
+    padding: 40px;
+    text-align: center;
+    font-family: 'Georgia', serif;
+}
+
+/* ========================================================= */
+/* 🖼️ CONTROL MANUAL: DETALLES DEL EVENTO (RÁPIDO) */
+/* ========================================================= */
+/* Excluido del scroll, aparece inmediatamente con un fade-in rápido al cargar */
+.content-box.details {
+    /* 1. Estado inicial (oculto, sin desplazamiento) */
+    opacity: 0;
+    transform: translateY(0px); 
+    
+    /* 2. Transición muy corta (0.5 segundos) */
+    transition: opacity 0.5s ease-out; 
+    /* ¡IMPORTANTE! Quitar el filtro blur de esta sección si deseas que aparezca rápidamente nítida */
+    filter: blur(0);
+}
+
+/* 3. Estado de aparición: Sobreescribe los estilos cuando está visible */
+.content-box.details.show {
+    opacity: 1;
+    transform: translateY(0); 
+}
