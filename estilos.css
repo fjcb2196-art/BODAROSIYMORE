@@ -2,19 +2,18 @@
 /* 🎨 PALETA DE COLORES Y VARIABLES GLOBALES */
 /* ========================================================= */
 :root {
-    --color-principal: #4D5C58;       /* Acento para títulos y botones */
-    --color-secundario: #92A091;      /* Color alternativo para hover y detalles */
-    --color-texto: #000000;           /* Texto principal */
-    --color-acento: #C4CDC9;          /* Bordes y campos */
-    --color-fondo-container: rgba(250, 250, 245, 0.95); /* Fondo suave para contenedores */
+    --color-principal: #4D5C58;
+    --color-secundario: #92A091;
+    --color-texto: #000000;
+    --color-acento: #C4CDC9;
+    --color-fondo-container: rgba(250, 250, 245, 0.95);
 }
 
 /* ========================================================= */
-/* 🧭 BASE HTML Y BODY (CORRECCIÓN SAFARI/iOS) */
+/* 🧭 BASE HTML Y BODY (CORRECCIÓN CRÍTICA DE SCROLL) */
 /* ========================================================= */
 html {
     height: 100%;
-    /* CORREGIDO: Eliminamos overflow: hidden para evitar conflictos de scroll en móviles */
 }
 body {
     font-family: 'Cormorant Garamond', serif;
@@ -25,9 +24,9 @@ body {
     height: 100%;
     min-height: 100vh;
     background-image: none;
-    overflow: hidden;
+    overflow: hidden; /* Controla el overflow para que solo el wrapper se mueva */
     font-size: 1.1rem;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0); /* Mantenemos para mejor rendimiento de la animación */
     -webkit-transform: translate3d(0, 0, 0);
 }
 
@@ -35,8 +34,9 @@ body {
 /* 🖼️ WRAPPER PRINCIPAL CON FONDO Y SCROLL (AJUSTADO) */
 /* ========================================================= */
 #main-wrapper {
-    height: 100vh;
-    min-height: 100%; /* Asegura que siempre tenga al menos el alto del contenido */
+    /* CORRECCIÓN 1: Se usa 100% en lugar de 100vh en el alto para evitar el 'salto' en móviles */
+    height: 100%;
+    min-height: 100vh; /* Se mantiene para asegurar que el scroll abarque toda la pantalla */
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
     background-image: url('https://i.ibb.co/1tbLYZVn/Untitled-design.png');
@@ -49,7 +49,7 @@ body {
 }
 
 /* ========================================================= */
-/* 🌸 DECORACIÓN SUPERIOR (Imagen fija con transición) */
+/* 🌸 DECORACIÓN SUPERIOR */
 /* ========================================================= */
 .title-decoration-container {
     position: fixed;
@@ -92,8 +92,10 @@ body {
     position: relative;
     z-index: 11;
 }
+
 .content-box {
-    min-height: 100vh;
+    /* CORRECCIÓN 2: Usamos min-height: 90vh para dejar un pequeño margen y evitar el conflicto del 100vh */
+    min-height: 90vh; 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -105,7 +107,8 @@ body {
     border-radius: 0;
     padding: 30px 15px;
     margin: 0 auto;
-    max-width: 90%;
+    /* CORRECCIÓN 3: Cambiamos a 100% para que ocupe todo el espacio del contenedor padre */
+    max-width: 100%; 
     transition: all 0.8s ease-out;
     will-change: transform, opacity;
 }
@@ -121,7 +124,7 @@ body {
 }
 
 /* ========================================================= */
-/* ✨ EFECTOS DE APARICIÓN EN SCROLL */
+/* ✨ EFECTOS DE APARICIÓN EN SCROLL (Mantener) */
 /* ========================================================= */
 .hidden {
     opacity: 0;
@@ -135,7 +138,7 @@ body {
 }
 
 /* ========================================================= */
-/* 🖋️ TIPOGRAFÍA Y TÍTULOS */
+/* 🖋️ TIPOGRAFÍA Y TÍTULOS (Mantener) */
 /* ========================================================= */
 h2, h3, .invitation-intro {
     font-family: 'Cormorant Garamond', serif;
@@ -150,8 +153,8 @@ h2, h3, .invitation-intro {
 .title-image {
     max-width: 100%;
     max-height: 50vh;
-    width: fixed;
-    height: fixed;
+    width: auto; /* Usar 'auto' en lugar de 'fixed' */
+    height: auto; /* Usar 'auto' en lugar de 'fixed' */
     display: block;
     margin: 0 auto;
     padding: 5vh 0;
@@ -160,7 +163,7 @@ h2, h3, .invitation-intro {
 }
 
 /* ========================================================= */
-/* 📍 BOTONES Y FORMULARIO RSVP */
+/* 📍 BOTONES Y FORMULARIO RSVP (Mantener) */
 /* ========================================================= */
 .map-link, .rsvp-button {
     display: inline-block;
@@ -216,7 +219,7 @@ h2, h3, .invitation-intro {
 }
 
 /* ========================================================= */
-/* ⏳ CONTADOR DE TIEMPO */
+/* ⏳ CONTADOR DE TIEMPO (Mantener) */
 /* ========================================================= */
 #countdown {
     font-family: 'Cormorant Garamond', serif;
@@ -294,73 +297,61 @@ h2, h3, .invitation-intro {
 }
 
 /* ========================================================= */
-/* 📱 MEDIA QUERIES PARA MÓVILES (Optimización de espaciado y fuentes) */
+/* 📱 MEDIA QUERIES (Ajustes responsivos) */
 /* ========================================================= */
 
 @media (max-width: 768px) {
-    /* Contenedor principal para evitar márgenes grandes en tablets */
-    .container {
-        padding: 0 10px;
-        max-width: 95%; 
-    }
+    /* Contenedor principal */
+    .container {
+        padding: 0 10px;
+        max-width: 95%; 
+    }
 
-    /* Reducción de fuentes para móviles */
-    body {
-        font-size: 1.0rem; 
-    }
-    h2, h3, .invitation-intro {
-        font-size: 1.3em; 
-    }
-    
-    /* Ajuste de padding de las cajas de contenido */
-    .content-box {
-        padding: 50px 10px; /* Más padding vertical en móviles */
-    }
+    /* Reducción de fuentes para móviles */
+    body {
+        font-size: 1.0rem; 
+    }
+    h2, h3, .invitation-intro {
+        font-size: 1.3em; 
+    }
+    
+    /* Ajuste de espaciado para la caja de contenido */
+    .content-box {
+        min-height: auto; /* Permitir que el contenido defina la altura */
+        padding: 50px 10px; 
+    }
 
-    .intro-box {
-        min-height: 85vh;
-        padding-top: 80px; /* Usar valor fijo para un espaciado consistente */
-        padding-bottom: 40px;
-    }
-    
-    /* Contador de tiempo */
-    #countdown {
-        font-size: 2.5em; /* Reducir el tamaño general */
-    }
+    .intro-box {
+        min-height: 85vh;
+        padding-top: 80px; 
+        padding-bottom: 40px;
+    }
+    
+    /* Contador de tiempo */
+    #countdown {
+        font-size: 2em; 
+    }
 }
 
 @media (max-width: 480px) {
-    /* Ajustes específicos para teléfonos muy pequeños */
-    
-    /* Títulos */
-    h2, h3, .invitation-intro {
-        font-size: 1.2em; 
-    }
+    /* Títulos */
+    h2, h3, .invitation-intro {
+        font-size: 1.1em; 
+    }
 
-    /* Imágenes principales */
-    .title-image {
-        max-height: 40vh; /* Se asegura de que quepa bien en la pantalla */
-        padding: 2vh 0;
-    }
-    
-    /* Formulario RSVP */
-    #rsvp-form {
-        padding: 15px;
-    }
-    
-    /* Contador de tiempo (ajustado para que no se desborde) */
-    #countdown {
-        font-size: 8vw !important; /* Usar vw para que se ajuste al ancho */
-        padding: 0 2px;
-    }
-    .countdown-unit {
-        margin: 0 5px !important;
-    }
+    /* Contador de tiempo */
+    #countdown {
+        font-size: 7vw !important;
+        padding: 0 5px;
+    }
+    .countdown-unit {
+        margin: 0 2px !important;
+    }
 }
 
 
 /* ========================================================= */
-/* Pantalla de bienvenida */
+/* Pantalla de bienvenida (Mantener) */
 /* ========================================================= */
 #pantalla-bienvenida {
   position: fixed;
