@@ -14,7 +14,7 @@
 /* ========================================================= */
 html {
     height: 100%;
-    /* Eliminamos overflow: hidden para evitar conflictos de scroll en móviles */
+    /* CORREGIDO: Eliminamos overflow: hidden para evitar conflictos de scroll en móviles */
 }
 body {
     font-family: 'Cormorant Garamond', serif;
@@ -294,35 +294,74 @@ h2, h3, .invitation-intro {
 }
 
 /* ========================================================= */
-/* 📱 MEDIA QUERIES PARA MÓVILES (Optimización de espaciado) */
+/* 📱 MEDIA QUERIES PARA MÓVILES (Optimización de espaciado y fuentes) */
 /* ========================================================= */
+
 @media (max-width: 768px) {
-    /* Ajuste para evitar problemas con la unidad vh en iOS */
+    /* Contenedor principal para evitar márgenes grandes en tablets */
+    .container {
+        padding: 0 10px;
+        max-width: 95%; 
+    }
+
+    /* Reducción de fuentes para móviles */
+    body {
+        font-size: 1.0rem; 
+    }
+    h2, h3, .invitation-intro {
+        font-size: 1.3em; 
+    }
+    
+    /* Ajuste de padding de las cajas de contenido */
+    .content-box {
+        padding: 50px 10px; /* Más padding vertical en móviles */
+    }
+
     .intro-box {
-        min-height: 85vh; /* Se mantiene vh para la altura mínima */
-        padding-top: 100px; /* Usar valor fijo para un espaciado consistente */
-        padding-bottom: 50px;
+        min-height: 85vh;
+        padding-top: 80px; /* Usar valor fijo para un espaciado consistente */
+        padding-bottom: 40px;
+    }
+    
+    /* Contador de tiempo */
+    #countdown {
+        font-size: 2.5em; /* Reducir el tamaño general */
     }
 }
+
 @media (max-width: 480px) {
-    .countdown-overlay {
-        font-size: 9vw !important;
-        padding: 0 2px;
-    }
-    .countdown-unit span {
-        font-size: 1.8em !important;
-        line-height: 1 !important;
-    }
-    #countdown {
-        max-width: 100% !important;
-        padding: 5px 0 !important;
-    }
-   .countdown-unit {
-    margin: 0 !important;
-}
+    /* Ajustes específicos para teléfonos muy pequeños */
+    
+    /* Títulos */
+    h2, h3, .invitation-intro {
+        font-size: 1.2em; 
+    }
+
+    /* Imágenes principales */
+    .title-image {
+        max-height: 40vh; /* Se asegura de que quepa bien en la pantalla */
+        padding: 2vh 0;
+    }
+    
+    /* Formulario RSVP */
+    #rsvp-form {
+        padding: 15px;
+    }
+    
+    /* Contador de tiempo (ajustado para que no se desborde) */
+    #countdown {
+        font-size: 8vw !important; /* Usar vw para que se ajuste al ancho */
+        padding: 0 2px;
+    }
+    .countdown-unit {
+        margin: 0 5px !important;
+    }
 }
 
+
+/* ========================================================= */
 /* Pantalla de bienvenida */
+/* ========================================================= */
 #pantalla-bienvenida {
   position: fixed;
   top: 0;
