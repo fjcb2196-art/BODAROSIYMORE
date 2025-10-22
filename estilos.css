@@ -125,7 +125,7 @@ body {
 /* ========================================================= */
 /* ✨ EFECTOS DE APARICIÓN EN SCROLL (Añadido BLUR GLOBAL) */
 /* ========================================================= */
-/* Estado Inicial (CSS se aplica a través de JS al cargar) */
+/* Estado Inicial (Fade-out + Blur-in, o estado cuando está fuera de la vista) */
 .content-box {
     /* TRANSICIÓN: Ahora incluye 'filter' */
     transition: opacity 0.6s ease-out, transform 0.6s ease-out, filter 0.6s ease-out;
@@ -133,7 +133,7 @@ body {
     filter: blur(5px);
 }
 
-/* Estado Final (Clase añadida por JS cuando el elemento es visible) */
+/* Estado Final (Fade-in + Blur-out, o estado cuando está en la vista) */
 .content-box.show {
     opacity: 1 !important; 
     /* REMOVER BLUR: Se vuelve nítido al aparecer */
