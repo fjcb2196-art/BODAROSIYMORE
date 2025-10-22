@@ -46,18 +46,16 @@ const observer = new IntersectionObserver((entries, observer) => {
 document.addEventListener('DOMContentLoaded', () => {
     allContentBoxes.forEach((el) => {
         
-        // **NUEVA LÓGICA:** Excluir la sección 'details' del efecto de fade-in
+        // **LÓGICA CRÍTICA:** Excluir la sección 'details' del efecto de scroll
         if (el.classList.contains('details')) {
-            // 1. Mostrar inmediatamente
-            el.style.opacity = 1;
-            el.style.transform = 'translateY(0px)';
+            // 1. Mostrar inmediatamente con la clase 'show' para activar el FADE-IN rápido en CSS
             el.classList.add('show');
             
-            // 2. No observar, ya que no queremos que cambie con el scroll
+            // 2. Ya no es necesario observar esta sección
             return; 
         }
 
-        // Aplicar estilos iniciales de fade-in (para todas las demás secciones)
+        // Aplicar estilos iniciales de fade-in para todas las demás secciones (con desplazamiento)
         el.style.opacity = 0;
         el.style.transform = `translateY(${SLIDE_DISTANCE}px)`;
         el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
@@ -130,7 +128,7 @@ document.getElementById('boton-bienvenido').addEventListener('click', function (
     bienvenida.style.opacity = '0';
     
     // 2. Intentar la reproducción (CLAVE para Autoplay en móviles)
-    audio.volume = 0.25; // Volumen 25%
+    audio.volume = 0.25; 
     audio.play().catch(error => {
         console.log("Error de Autoplay (Ignorado si es por la política del navegador):", error);
     });
