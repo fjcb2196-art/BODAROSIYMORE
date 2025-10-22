@@ -1,59 +1,66 @@
 // =========================================================
-// 🌟 1. APARICIÓN/DESAPARICIÓN GRADUAL EN SCROLL
+// 🌟 1. APARICIÓN/DESAPARICIÓN GRADUAL EN SCROLL (OPTIMIZADO)
 // =========================================================
 
 // Elementos clave
 const decorationWrapper = document.getElementById('decoration-wrapper');
-const firstSection = document.querySelector('.content-box.section:nth-of-type(1)');
 const allContentBoxes = document.querySelectorAll('.content-box');
 
-// Umbrales para transición suave (0.00 a 1.00)
-const thresholds = Array.from({ length: 101 }, (_, i) => i / 100);
+// Umbrales para que la animación se dispare rápidamente (casi al inicio)
+const OPTIMIZED_THRESHOLD = 0.15; // 15% del elemento visible
 const SLIDE_DISTANCE = 80;
 
-// Observador de intersección
-const observer = new IntersectionObserver((entries) => {
+// Observador de intersección (usando un umbral fijo para eficiencia)
+const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
 
-        // 🎯 Aparición gradual de secciones
+        // 🎯 Aparición de secciones (solo animar una vez y desobservar)
         if (entry.target.classList.contains('content-box')) {
-            const ratio = entry.intersectionRatio;
-            const translateY = SLIDE_DISTANCE * (1 - ratio);
-
-            entry.target.style.opacity = ratio;
-            entry.target.style.transform = `translateY(${translateY}px)`;
-
-            // Activamos clase 'show' cuando el elemento está muy visible
-            if (ratio > 0.80) {
+            if (entry.isIntersecting) {
+                // Aplicamos la clase 'show' que activa la transición de CSS
                 entry.target.classList.add('show');
+                
+                // IMPORTANTE: Una vez animado, dejamos de observarlo para ahorrar recursos
+                observer.unobserve(entry.target);
             } else {
+                // Si el elemento sale de la vista, le quitamos 'show' (si es necesario)
                 entry.target.classList.remove('show');
             }
         }
 
         // 🎯 Ocultar/Mostrar decoración superior al pasar la primera sección
-        if (entry.target === firstSection && decorationWrapper) {
+        // Este observador sigue activo, ya que la decoración debe reaccionar al scroll.
+        if (entry.target === allContentBoxes[0] && decorationWrapper) {
             if (entry.isIntersecting) {
+                // Si la primera caja es visible, ocultar decoración
                 decorationWrapper.classList.add('hide-decoration');
                 decorationWrapper.classList.remove('show-decoration');
             } else {
-                // Muestra la decoración solo si volvemos a la parte superior
+                // Si la primera caja NO es visible, mostrar decoración
                 decorationWrapper.classList.remove('hide-decoration');
                 decorationWrapper.classList.add('show-decoration');
             }
         }
     });
 }, {
-    threshold: thresholds
+    // Un solo umbral más eficiente
+    threshold: OPTIMIZED_THRESHOLD 
 });
 
-// Activamos el observador en todas las secciones
-allContentBoxes.forEach((el) => observer.observe(el));
-if (firstSection) observer.observe(firstSection);
+// Inicializamos y asignamos estilos para la animación
+allContentBoxes.forEach((el) => {
+    // Inicializamos estilos para que CSS tome el control de la animación (transición)
+    el.style.opacity = 0;
+    el.style.transform = `translateY(${SLIDE_DISTANCE}px)`;
+    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    el.style.willChange = 'opacity, transform';
+    
+    observer.observe(el);
+});
 
 
 // =========================================================
-// ⏳ 2. CONTADOR REGRESIVO PARA EL EVENTO
+// ⏳ 2. CONTADOR REGRESIVO PARA EL EVENTO (Mantener)
 // =========================================================
 
 // ⚠️ Cambia esta fecha por la real del evento (¡ACTUALIZAR!)
@@ -77,43 +84,26 @@ const x = setInterval(() => {
     if (distance < 0) {
         clearInterval(x);
         if (countdownEl) {
-             countdownEl.innerHTML = "¡EL GRAN DÍA ES HOY!";
+            countdownEl.innerHTML = "¡EL GRAN DÍA ES HOY!";
         }
     }
 }, 1000);
 
 
 // =========================================================
-// 🌸 3. INICIALIZACIÓN DE LA PÁGINA (Prepara el contenido oculto)
+// 🌸 3. INICIALIZACIÓN DE LA PÁGINA
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    const wrapper = document.getElementById('decoration-wrapper');
-    const titleBox = document.querySelector('.content-box.title-box');
-
-    // Inicializamos opacidad y posición de todas las secciones para la animación de scroll
-    allContentBoxes.forEach(box => {
-        box.style.opacity = 0;
-        box.style.transform = `translateY(${SLIDE_DISTANCE}px)`;
-    });
-
-    // Pequeño retraso para la animación de la decoración
-    setTimeout(() => {
-        // Activamos la decoración floral
-        wrapper?.classList.add('show-decoration');
-
-        // Mostramos el título inmediatamente (ya que está al inicio del scroll)
-        if (titleBox) {
-            titleBox.style.opacity = 1;
-            titleBox.style.transform = 'translateY(0px)';
-            titleBox.classList.add('show');
-        }
-    }, 300);
+    // Activamos la decoración floral inmediatamente
+    if (decorationWrapper) {
+        decorationWrapper.classList.add('show-decoration');
+    }
 });
 
 
 // =========================================================
-// 📬 4. MENSAJE DE CONFIRMACIÓN DE FORMULARIO
+// 📬 4. MENSAJE DE CONFIRMACIÓN DE FORMULARIO (Mantener)
 // =========================================================
 
 const rsvpForm = document.getElementById('rsvp-form');
@@ -126,7 +116,7 @@ if (rsvpForm) {
 
 
 // =========================================================
-// 🔊 5. BOTÓN DE BIENVENIDA Y REPRODUCCIÓN DE AUDIO (CORREGIDO)
+// 🔊 5. BOTÓN DE BIENVENIDA Y REPRODUCCIÓN DE AUDIO (CORRECTO)
 // =========================================================
 
 document.getElementById('boton-bienvenido').addEventListener('click', function () {
@@ -136,14 +126,13 @@ document.getElementById('boton-bienvenido').addEventListener('click', function (
     // 1. Iniciar la transición visual (opacidad a 0)
     bienvenida.style.opacity = '0';
     
-    // 2. Intentar la reproducción inmediatamente (clave para Autoplay)
-    audio.volume = 0.25; // Establecer volumen al 25%
+    // 2. Intentar la reproducción (CLAVE para Autoplay)
+    audio.volume = 0.25; // Volumen 25%
     audio.play().catch(error => {
-        // Esto captura errores silenciosos de Autoplay.
         console.log("Error de Autoplay:", error);
     });
 
-    // 3. Ocultar el div completamente después de la transición de 1.5s (1500ms)
+    // 3. Ocultar el div completamente después de la transición de 1.5s
     setTimeout(() => {
         bienvenida.style.display = 'none';
     }, 1500); 
