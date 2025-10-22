@@ -300,6 +300,8 @@ h2, h3, .invitation-intro {
 /* 📱 MEDIA QUERIES (Ajustes responsivos) */
 /* ========================================================= */
 
+/* estilos.css (Sección 📱 MEDIA QUERIES) */
+
 @media (max-width: 768px) {
     /* Contenedor principal */
     .container {
@@ -311,8 +313,15 @@ h2, h3, .invitation-intro {
     body {
         font-size: 1.0rem; 
     }
-    h2, h3, .invitation-intro {
-        font-size: 1.3em; 
+    
+    /* Mantenemos el tamaño del texto de introducción como estaba */
+    .invitation-intro {
+        font-size: 1.3em; /* Tamaño original de esta media query */
+    }
+
+    /* TÍTULOS GRANDES: Solo para h2 y h3 */
+    h2, h3 {
+        font-size: 1.7em; /* ¡AUMENTADO! Se verán notables */
     }
     
     /* Ajuste de espaciado */
@@ -334,9 +343,14 @@ h2, h3, .invitation-intro {
 }
 
 @media (max-width: 480px) {
-    /* Títulos */
-    h2, h3, .invitation-intro {
-        font-size: 1.1em; 
+    /* Mantenemos el tamaño del texto de introducción como estaba */
+    .invitation-intro {
+        font-size: 1.1em; /* Tamaño original de esta media query */
+    }
+
+    /* TÍTULOS GRANDES: Solo para h2 y h3 en celulares pequeños */
+    h2, h3 {
+        font-size: 1.5em; /* ¡AUMENTADO! Serán fácilmente legibles */
     }
 
     /* Contador de tiempo */
@@ -385,3 +399,4 @@ h2, h3, .invitation-intro {
     text-align: center;
     font-family: 'Georgia', serif;
 }
+
