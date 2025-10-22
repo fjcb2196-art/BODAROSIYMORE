@@ -6,11 +6,11 @@
 const decorationWrapper = document.getElementById('decoration-wrapper');
 const allContentBoxes = document.querySelectorAll('.content-box');
 
-// Umbrales para que la animación se dispare rápidamente (casi al inicio)
-const OPTIMIZED_THRESHOLD = 0.15; // 15% del elemento visible
+// Umbral fijo para que la animación se dispare al 15% de visibilidad
+const OPTIMIZED_THRESHOLD = 0.15; 
 const SLIDE_DISTANCE = 80;
 
-// Observador de intersección (usando un umbral fijo para eficiencia)
+// Observador de intersección
 const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
 
@@ -20,47 +20,49 @@ const observer = new IntersectionObserver((entries, observer) => {
                 // Aplicamos la clase 'show' que activa la transición de CSS
                 entry.target.classList.add('show');
                 
-                // IMPORTANTE: Una vez animado, dejamos de observarlo para ahorrar recursos
+                // OPTIMIZACIÓN: Una vez animado, dejamos de observarlo
                 observer.unobserve(entry.target);
-            } else {
-                // Si el elemento sale de la vista, le quitamos 'show' (si es necesario)
-                entry.target.classList.remove('show');
             }
         }
 
-        // 🎯 Ocultar/Mostrar decoración superior al pasar la primera sección
-        // Este observador sigue activo, ya que la decoración debe reaccionar al scroll.
+        // 🎯 Ocultar/Mostrar decoración superior
         if (entry.target === allContentBoxes[0] && decorationWrapper) {
             if (entry.isIntersecting) {
                 // Si la primera caja es visible, ocultar decoración
                 decorationWrapper.classList.add('hide-decoration');
                 decorationWrapper.classList.remove('show-decoration');
             } else {
-                // Si la primera caja NO es visible, mostrar decoración
+                // Si la primera caja NO es visible (scroll hacia abajo), mostrar decoración
                 decorationWrapper.classList.remove('hide-decoration');
                 decorationWrapper.classList.add('show-decoration');
             }
         }
     });
 }, {
-    // Un solo umbral más eficiente
     threshold: OPTIMIZED_THRESHOLD 
 });
 
 // Inicializamos y asignamos estilos para la animación
-allContentBoxes.forEach((el) => {
-    // Inicializamos estilos para que CSS tome el control de la animación (transición)
-    el.style.opacity = 0;
-    el.style.transform = `translateY(${SLIDE_DISTANCE}px)`;
-    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-    el.style.willChange = 'opacity, transform';
-    
-    observer.observe(el);
+document.addEventListener('DOMContentLoaded', () => {
+    allContentBoxes.forEach((el) => {
+        // Inicializamos estilos que el CSS usará en la animación (desde 80px abajo y opacidad 0)
+        el.style.opacity = 0;
+        el.style.transform = `translateY(${SLIDE_DISTANCE}px)`;
+        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        el.style.willChange = 'opacity, transform';
+        
+        observer.observe(el);
+    });
+
+    // Activamos la decoración floral inmediatamente al cargar
+    if (decorationWrapper) {
+        decorationWrapper.classList.add('show-decoration');
+    }
 });
 
 
 // =========================================================
-// ⏳ 2. CONTADOR REGRESIVO PARA EL EVENTO (Mantener)
+// ⏳ 2. CONTADOR REGRESIVO PARA EL EVENTO
 // =========================================================
 
 // ⚠️ Cambia esta fecha por la real del evento (¡ACTUALIZAR!)
@@ -85,25 +87,14 @@ const x = setInterval(() => {
         clearInterval(x);
         if (countdownEl) {
             countdownEl.innerHTML = "¡EL GRAN DÍA ES HOY!";
+            countdownEl.classList.add('finished');
         }
     }
 }, 1000);
 
 
 // =========================================================
-// 🌸 3. INICIALIZACIÓN DE LA PÁGINA
-// =========================================================
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Activamos la decoración floral inmediatamente
-    if (decorationWrapper) {
-        decorationWrapper.classList.add('show-decoration');
-    }
-});
-
-
-// =========================================================
-// 📬 4. MENSAJE DE CONFIRMACIÓN DE FORMULARIO (Mantener)
+// 📬 3. MENSAJE DE CONFIRMACIÓN DE FORMULARIO
 // =========================================================
 
 const rsvpForm = document.getElementById('rsvp-form');
@@ -111,12 +102,13 @@ if (rsvpForm) {
     rsvpForm.addEventListener('submit', (event) => {
         event.preventDefault();
         alert('¡Gracias por confirmar! (Este es un mensaje de prueba de la funcionalidad).');
+        // Aquí iría la lógica para enviar los datos
     });
 }
 
 
 // =========================================================
-// 🔊 5. BOTÓN DE BIENVENIDA Y REPRODUCCIÓN DE AUDIO (CORRECTO)
+// 🔊 4. BOTÓN DE BIENVENIDA Y REPRODUCCIÓN DE AUDIO (CORRECCIÓN CRÍTICA)
 // =========================================================
 
 document.getElementById('boton-bienvenido').addEventListener('click', function () {
@@ -126,14 +118,20 @@ document.getElementById('boton-bienvenido').addEventListener('click', function (
     // 1. Iniciar la transición visual (opacidad a 0)
     bienvenida.style.opacity = '0';
     
-    // 2. Intentar la reproducción (CLAVE para Autoplay)
+    // 2. Intentar la reproducción (CLAVE para Autoplay en móviles)
     audio.volume = 0.25; // Volumen 25%
     audio.play().catch(error => {
-        console.log("Error de Autoplay:", error);
+        console.log("Error de Autoplay (Ignorado si es por la política del navegador):", error);
     });
 
     // 3. Ocultar el div completamente después de la transición de 1.5s
     setTimeout(() => {
         bienvenida.style.display = 'none';
+        
+        // Asegurar que el contenido principal aparezca si estaba oculto
+        const principal = document.querySelector('.invitacion-principal');
+        if (principal) {
+            principal.style.display = 'block'; 
+        }
     }, 1500); 
 });
