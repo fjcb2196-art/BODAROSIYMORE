@@ -4,7 +4,6 @@
 
 // Elementos clave
 const decorationWrapper = document.getElementById('decoration-wrapper');
-// El título ya está incluido en allContentBoxes, no es estrictamente necesario seleccionarlo aparte
 const firstSection = document.querySelector('.content-box.section:nth-of-type(1)');
 const allContentBoxes = document.querySelectorAll('.content-box');
 
@@ -125,28 +124,27 @@ if (rsvpForm) {
     });
 }
 
+
 // =========================================================
-// 🔊 5. BOTÓN DE BIENVENIDA Y REPRODUCCIÓN DE AUDIO (VERSIÓN FINAL)
+// 🔊 5. BOTÓN DE BIENVENIDA Y REPRODUCCIÓN DE AUDIO (CORREGIDO)
 // =========================================================
 
 document.getElementById('boton-bienvenido').addEventListener('click', function () {
     const bienvenida = document.getElementById('pantalla-bienvenida');
     const audio = document.getElementById('audio-boda');
     
-    // 1. INICIAR LA TRANSICIÓN VISUAL (opacidad a 0)
+    // 1. Iniciar la transición visual (opacidad a 0)
     bienvenida.style.opacity = '0';
     
-    // 2. Ejecutar la reproducción del audio inmediatamente
-    // Esto lo hacemos ANTES del timeout, ya que la interacción debe venir del click inicial.
-    // Usamos el .play() directamente.
+    // 2. Intentar la reproducción inmediatamente (clave para Autoplay)
     audio.volume = 0.25; // Establecer volumen al 25%
     audio.play().catch(error => {
-        // En caso de que falle por Autoplay, al menos lo registramos.
+        // Esto captura errores silenciosos de Autoplay.
         console.log("Error de Autoplay:", error);
     });
 
-    // 3. Ocultar el div completamente después de la transición de 1.5s (según tu CSS)
+    // 3. Ocultar el div completamente después de la transición de 1.5s (1500ms)
     setTimeout(() => {
         bienvenida.style.display = 'none';
-    }, 1500); // 1500ms es el tiempo de tu transición en estilos.css
+    }, 1500); 
 });
