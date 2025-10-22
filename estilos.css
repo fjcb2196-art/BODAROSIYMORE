@@ -304,7 +304,7 @@ h2, h3, .invitation-intro {
 @media (max-width: 768px) {
     /* Contenedor principal */
     .container {
-        padding: 0 10px;
+        padding: 0 30px;
         max-width: 95%; 
     }
 
@@ -326,7 +326,7 @@ h2, h3, .invitation-intro {
     /* Ajuste de espaciado */
     .content-box {
         min-height: auto; 
-        padding: 50px 10px; 
+        padding: 50px 30px; 
     }
 
     .intro-box {
@@ -436,3 +436,4 @@ h2, h3, .invitation-intro {
         max-height: 70vh; 
     }
 }
+
