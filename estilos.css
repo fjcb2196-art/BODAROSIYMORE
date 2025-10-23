@@ -48,38 +48,20 @@ body {
     
     transform: translate3d(0, 0, 0);
     -webkit-transform: translate3d(0, 0, 0);
+    }
+
+ /* ✨ Transición suave al mostrar la carta */
+#main-wrapper {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 3s ease;
 }
 
-/* ========================================================= */
-/* 🌸 DECORACIÓN SUPERIOR */
-/* ========================================================= */
-.title-decoration-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 1s ease-out;
-    transform: translate3d(0, 0, 0);
-    -webkit-transform: translate3d(0, 0, 0);
-    will-change: transform, opacity;
+#main-wrapper.visible {
+  opacity: 1;
+  visibility: visible;
 }
-.title-decoration-container.show-decoration { opacity: 1; }
-.title-decoration-container.hide-decoration { opacity: 0; }
 
-#title-decoration-image {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 95vw;
-    max-height: 95vh;
-    width: auto;
-    height: auto;
-}
 
 /* ========================================================= */
 /* 📦 CONTENEDORES DE CONTENIDO Y SECCIONES (Responsive) */
@@ -447,4 +429,85 @@ h2, h3, .invitation-intro {
     .content-box.details .event-image {
         max-height: 70vh; 
     }
+}
+
+/* ===============BOTON BIENVENIDA============================== */
+
+
+.split-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.split-image {
+  position: absolute;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.8s ease-in-out;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+}
+
+.photo-inner {
+  height: 100%;
+  width: 100%;
+  background-image: url('unnamed.jpg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  transition: background-position 0.3s ease;
+}
+
+.photo-left {
+  background-position: left center;
+}
+
+.photo-right {
+  background-position: right center;
+}
+
+.left-door {
+  left: 0;
+  width: 100vw;
+  clip-path: polygon(0% 100%, 100% 0%, 0% 0%);
+  z-index: 5;
+}
+
+.right-door {
+  right: 0;
+  width: 100vw;
+  clip-path: polygon(100% 0%, 0% 100%, 100% 100%);
+  z-index: 6;
+}
+
+.left-door.open {
+  transform: translateX(-100%);
+}
+
+.right-door.open {
+  transform: translateX(100%);
+}
+
+#toggleButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 95px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: opacity 1s ease, transform 0.3s ease;
+}
+
+#toggleButton:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+#toggleButton.fade-out {
+  opacity: 0;
+  pointer-events: none;
 }
